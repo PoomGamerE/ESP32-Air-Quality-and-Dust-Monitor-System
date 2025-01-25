@@ -6,9 +6,18 @@ module.exports = (pool) => {
   // ฟังก์ชันตรวจสอบและสร้างตารางอัตโนมัติ
   const ensureTableExists = async () => {
     try {
-      const result = await pool.query("SELECT COUNT(*) FROM air_quality_data;");
-      if (parseInt(result.rows[0].count, 10) === 0) {
-        console.log("No data found. Initializing table...");
+      // ตรวจสอบว่าตารางมีอยู่หรือไม่
+      const tableExistsQuery = `
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables
+          WHERE table_name = 'air_quality_data'
+        );
+      `;
+      const tableCheckResult = await pool.query(tableExistsQuery);
+  
+      // หากตารางไม่มีอยู่ ให้สร้างตารางใหม่
+      if (!tableCheckResult.rows[0].exists) {
+        console.log("Table 'air_quality_data' does not exist. Creating table...");
         const createTableQuery = `
           CREATE TABLE IF NOT EXISTS air_quality_data (
             id SERIAL PRIMARY KEY,
@@ -20,12 +29,14 @@ module.exports = (pool) => {
           );
         `;
         await pool.query(createTableQuery);
-        console.log("Table initialized successfully.");
+        console.log("Table 'air_quality_data' created successfully.");
+      } else {
+        console.log("Table 'air_quality_data' already exists.");
       }
     } catch (err) {
       console.error("Error initializing table:", err);
     }
-  };
+  };  
 
   // เรียก ensureTableExists เมื่อเริ่มเซิร์ฟเวอร์
   ensureTableExists();
