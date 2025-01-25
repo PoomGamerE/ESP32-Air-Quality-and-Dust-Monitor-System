@@ -7,9 +7,10 @@ services:
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
-        fromDatabase: esp32-db
+        fromDatabase:
+          name: esp32-db
       - key: SECRET_KEY
-        value: "my-super-secret-key" # แก้ไขเป็น SECRET_KEY ที่คุณต้องการ
+        value: "my-super-secret-key" # ใส่ SECRET_KEY ที่คุณต้องการ
 databases:
   - name: esp32-db
     plan: free
