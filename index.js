@@ -40,22 +40,26 @@ const initDB = async () => {
 initDB();
 
 // API endpoint to handle data from ESP32
-app.post("/api/data", async (req, res) => {
+app.post('/api/data', async (req, res) => {
   const { temperature, humidity, dust_density, gas_level } = req.body;
+
+  console.log('Request body:', req.body); // เพิ่ม log นี้
 
   if (temperature && humidity && dust_density && gas_level) {
     try {
       const result = await pool.query(
-        "INSERT INTO air_quality (temperature, humidity, dust_density, gas_level) VALUES ($1, $2, $3, $4) RETURNING id",
+        'INSERT INTO air_quality (temperature, humidity, dust_density, gas_level) VALUES ($1, $2, $3, $4) RETURNING id',
         [temperature, humidity, dust_density, gas_level]
       );
-      res.status(200).json({ message: "Data inserted successfully", id: result.rows[0].id });
+      console.log('Insert successful:', result.rows[0]); // เพิ่ม log นี้
+      res.status(200).json({ message: 'Data inserted successfully', id: result.rows[0].id });
     } catch (err) {
-      console.error("Database insertion error:", err.message);
-      res.status(500).json({ message: "Failed to insert data" });
+      console.error('Database insertion error:', err.message); // เพิ่ม log นี้
+      res.status(500).json({ message: 'Failed to insert data', error: err.message });
     }
   } else {
-    res.status(400).json({ message: "Invalid data format" });
+    console.error('Invalid data format:', req.body); // เพิ่ม log นี้
+    res.status(400).json({ message: 'Invalid data format' });
   }
 });
 
