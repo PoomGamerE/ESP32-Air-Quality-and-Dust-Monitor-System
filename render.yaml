@@ -7,9 +7,6 @@ services:
     startCommand: "npm start"
     envVars:
       - key: DATABASE_URL
-        sync: false
+        required: true
       - key: SECRET_KEY
-        sync: false
-    disk:
-      - name: air-quality-disk
-        mountPath: /var/data
+        required: true
