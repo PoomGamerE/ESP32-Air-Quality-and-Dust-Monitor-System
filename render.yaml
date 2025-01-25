@@ -1,12 +1,15 @@
 services:
   - type: web
-    name: esp32-api
+    name: air-quality-monitoring-backend
     env: node
     plan: free
-    buildCommand: yarn install
-    startCommand: node index.js
-
-databases:
-  - name: esp32-db
-    plan: free
-    region: oregon
+    buildCommand: "npm install && node db/init.js"
+    startCommand: "npm start"
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+    disk:
+      - name: air-quality-disk
+        mountPath: /var/data
