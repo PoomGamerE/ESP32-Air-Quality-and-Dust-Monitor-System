@@ -1,12 +1,16 @@
 services:
   - type: web
-    name: air-quality-monitoring-backend
+    name: esp32-api
     env: node
     plan: free
-    buildCommand: "npm install && node db/init.js"
-    startCommand: "npm start"
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: DATABASE_URL
-        required: true
+        fromDatabase: esp32-db
       - key: SECRET_KEY
-        required: true
+        value: "my-super-secret-key" # แก้ไขเป็น SECRET_KEY ที่คุณต้องการ
+databases:
+  - name: esp32-db
+    plan: free
+    region: oregon
