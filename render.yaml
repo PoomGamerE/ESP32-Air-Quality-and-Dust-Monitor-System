@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: esp32-api
+    env: node
+    plan: free
+    buildCommand: yarn install
+    startCommand: node index.js
+
+databases:
+  - name: esp32-db
+    plan: free
+    region: oregon
