@@ -30,12 +30,14 @@ module.exports = (pool) => {
   router.get("/", async (req, res) => {
     try {
       const result = await pool.query("SELECT * FROM air_quality_data ORDER BY created_at DESC;");
+      console.log("Query result:", result.rows); // แสดงผลข้อมูลที่ query ได้
       res.json(result.rows);
     } catch (err) {
+      console.error("Database error:", err); // แสดง log error
       res.status(500).json({ error: "Database error" });
     }
   });
-
+  
   // UPDATE: PUT /api/data/:id
   router.put("/:id", async (req, res) => {
     const { id } = req.params;
